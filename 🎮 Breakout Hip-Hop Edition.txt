@@ -1,0 +1,71 @@
+🎮 Breakout: Hip-Hop Edition (Working Title)
+============================================
+
+A classic block-breaking game with a foundation that can evolve into a roguelike RPG 
+with a hip-hop soundtrack and urban 2.5D vibes.
+
+---
+
+✅ Gotta-Haves (MVP)
+--------------------
+1. Core Mechanics
+   - Paddle controlled by player (keyboard or mouse)
+   - Ball physics (bounce on walls, paddle, and bricks)
+   - Bricks with different hit counts (some require multiple hits)
+   - Lose condition: ball hits the ground
+   - Win condition: all bricks are destroyed
+
+2. Game Feel
+   - Classic arcade physics & visuals
+   - Smooth paddle and ball movement
+   - Simple start and restart screens
+
+---
+
+🎨 Visual/Audio (Initial)
+-------------------------
+- Graphics: Simple retro blocks and paddle (use Pygame surfaces)
+- Audio: Placeholder sound effects; later integrate custom hip-hop tracks
+
+---
+
+✨ Nice-to-Haves (Future Expansion)
+-----------------------------------
+- Procedural level generation (roguelike vibe)
+- RPG elements (player stats, power-ups, progression)
+- Boss fights and secret rooms
+- 2.5D urban art style with animations
+- Full custom hip-hop soundtrack
+
+---
+
+🛠 Technical Stack
+------------------
+- Python (main language)
+- Pygame (for rendering, input, collision detection, sound)
+- Modular, OOP design to make expansions easy
+
+---
+
+🎯 Learning Goals
+-----------------
+- Strengthen game loop & event handling
+- Explore Pygame conventions & game structure
+- Expand beyond OOP (maybe ECS or procedural generation patterns later)
+
+---
+
+⏳ Timeline
+-----------
+- Week 1: Build a playable MVP (paddle, ball, bricks, win/lose)
+- Future weeks: Layer in power-ups, levels, procedural content, soundtrack
+
+---
+
+✅ Next Steps
+-------------
+1. Decide Framework → Confirm Pygame
+2. Set up Environment → Install Pygame and create a minimal window
+3. Basic Game Loop → Empty loop with quit handling and frame rate control
+4. Draw Paddle & Ball → Render and move with input
+5. Collision Detection → Ball bounces off paddle/walls and destroys bricks
