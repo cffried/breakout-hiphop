@@ -1,68 +1,115 @@
 import pygame
-from config import WHITE
 
-# --- Special Colors ---
-PURPLE = (150, 0, 200)
-YELLOW = (255, 255, 0)
+# === Central Brick Behavior Dictionary ===
+BRICK_BEHAVIOR = {
+    "purple": {"hits": 1, "next": None},
+    "purple_cracked": {"hits": 1, "next": "yellow"},
+    "yellow": {"hits": 1, "next": None},
+    "orange": {"hits": 1, "next": "yellow"},
+    "red":    {"hits": 1, "next": "orange"},
+    "pink":   {"hits": 1, "next": "red"},
+    "pink_special": {"hits": 3, "next": ["purple_cracked", "yellow", None]},
+}
 
+# === Brick Dimensions ===
+BRICK_WIDTH = 60
+BRICK_HEIGHT = 20
+BRICK_PADDING = 5
+TOP_OFFSET = 50
+LEFT_OFFSET = 40
+
+# === Brick Class ===
 class Brick:
-    def __init__(self, x, y, width=60, height=20, hp=1, color=WHITE, special=None):
-        self.rect = pygame.Rect(x, y, width, height)
-        self.hp = hp
+    def __init__(self, row, col, color):
+        self.row = row
+        self.col = col
         self.color = color
-        self.special = special  # Placeholder for future abilities
+        self.set_behavior_from_color()
+        self.alive = True
+        self.rect = pygame.Rect(
+            LEFT_OFFSET + col * (BRICK_WIDTH + BRICK_PADDING),
+            TOP_OFFSET + row * (BRICK_HEIGHT + BRICK_PADDING),
+            BRICK_WIDTH,
+            BRICK_HEIGHT
+        )
 
-    def hit(self):
-        """Reduce hp when hit, change color if needed, return True if destroyed."""
-        self.hp -= 1
+    def set_behavior_from_color(self):
+        behavior = BRICK_BEHAVIOR[self.color]
+        self.hits = behavior["hits"]
+        self.next = behavior["next"]
 
-        # Special behavior: Purple bricks turn yellow when hp goes to 1
-        if self.color == PURPLE and self.hp == 1:
-            self.color = YELLOW
-
-        return self.hp <= 0  # True if brick is destroyed
+    def take_hit(self):
+        self.hits -= 1
+        if self.hits <= 0:
+            if isinstance(self.next, list):
+                # Handle multi-stage brick with queue
+                next_color = self.next.pop(0)
+                if next_color:
+                    self.color = next_color
+                    self.set_behavior_from_color()
+                else:
+                    self.alive = False
+            elif self.next:
+                self.color = self.next
+                self.set_behavior_from_color()
+            else:
+                self.alive = False
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self.color, self.rect)
+        if not self.alive:
+            return
+        color_map = {
+            "purple": (160, 32, 240),
+            "purple_cracked": (200, 100, 255),
+            "yellow": (255, 215, 0),
+            "orange": (255, 165, 0),
+            "red": (255, 0, 0),
+            "pink": (255, 105, 180),
+            "pink_special": (255, 105, 180),
+        }
+        pygame.draw.rect(surface, color_map.get(self.color, (255, 255, 255)), self.rect)
+        pygame.draw.rect(surface, (0, 0, 0), self.rect, 2)  # outline
 
-
+# === BrickManager Class ===
 class BrickManager:
-    def __init__(self, rows=5, cols=10, brick_width=60, brick_height=20, padding=5, offset_y=50):
-        """Generate a grid of bricks with different properties."""
+    def __init__(self):
         self.bricks = []
 
-        for row in range(rows):
-            for col in range(cols):
-                x = col * (brick_width + padding) + 40
-                y = row * (brick_height + padding) + offset_y
+        # === Row 0: Sparse Pink Special Row ===
+        pink_special_cols = [1, 4, 7, 10]
+        for col in pink_special_cols:
+            self.bricks.append(Brick(0, col, "pink_special"))
 
-                # Top row: Purple, 2 HP, turns yellow after 1 hit
-                if row == 0:
-                    color = PURPLE
-                    hp = 2
-                else:
-                    # Example: stronger bricks lower down
-                    hp = 1 if row < 2 else 2
-                    color = (200, 200 - row * 30, 50 + row * 40)
+        # === Row 1: Purple ===
+        for col in range(12):
+            self.bricks.append(Brick(1, col, "purple"))
 
-                # Create brick object
-                self.bricks.append(Brick(x, y, brick_width, brick_height, hp, color))
+        # === Row 2: Yellow ===
+        for col in range(12):
+            self.bricks.append(Brick(2, col, "yellow"))
+
+        # === Row 3: Orange ===
+        for col in range(12):
+            self.bricks.append(Brick(3, col, "orange"))
+
+        # === Row 4: Red ===
+        for col in range(12):
+            self.bricks.append(Brick(4, col, "red"))
+
+        # === Row 5: Pink ===
+        for col in range(12):
+            self.bricks.append(Brick(5, col, "pink"))
+
+    def update(self):
+        self.bricks = [b for b in self.bricks if b.alive]
 
     def draw(self, surface):
-        """Draw all bricks."""
         for brick in self.bricks:
             brick.draw(surface)
 
-    def check_collision(self, ball_rect):
-        """
-        Check collisions with the ball.
-        - Removes brick if destroyed
-        - Returns True if collision occurred (for ball bounce)
-        """
-        for brick in self.bricks[:]:  # Copy to avoid issues when removing
-            if ball_rect.colliderect(brick.rect):
-                destroyed = brick.hit()
-                if destroyed:
-                    self.bricks.remove(brick)
-                return True  # Only handle one collision per frame
+    def check_collision(self, ball):
+        for brick in self.bricks:
+            if brick.alive and brick.rect.colliderect(ball.rect):
+                brick.take_hit()
+                return True  # stop after first collision
         return False

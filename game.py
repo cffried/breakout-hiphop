@@ -38,7 +38,7 @@ class Game:
                 sys.exit()
 
             # --- Brick Collision ---
-            if self.bricks.check_collision(self.ball.rect):
+            if self.bricks.check_collision(self.ball):
                 # Simple behavior: reverse ball's Y direction when hitting a brick
                 self.ball.speed[1] = -self.ball.speed[1]
 
