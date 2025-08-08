@@ -5,13 +5,17 @@ class Paddle:
     def __init__(self):
         self.width = 150
         self.height = 20
-        self.speed = 12
+        self.speed = 10
         self.rect = pygame.Rect(
             SCREEN_WIDTH // 2 - self.width // 2,
             SCREEN_HEIGHT - 40,
             self.width,
             self.height
         )
+    
+    def increase_speed(self, amount=5):
+        self.speed += amount
+        print(f"Paddle speed increased to {self.speed}")
 
     def move(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:

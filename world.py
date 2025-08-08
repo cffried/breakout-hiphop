@@ -7,7 +7,7 @@ import pygame
 # === Screen Config ===
 SCREEN_WIDTH = 1980
 SCREEN_HEIGHT = 1080
-FPS = 60
+FPS = 100
 
 # Create the actual screen surface
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))

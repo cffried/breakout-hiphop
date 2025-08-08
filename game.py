@@ -7,6 +7,7 @@ from paddle import Paddle
 from ball import Ball
 from brick_manager import BrickManager
 from world import SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, FPS
+from powerups import PowerUpManager
 
 
 class Game:
@@ -19,6 +20,7 @@ class Game:
         self.ball = Ball()
         self.bricks = BrickManager()
         self.clock = pygame.time.Clock()
+        self.powerups = PowerUpManager(self.paddle)  # 💡 pass paddle
 
     def run(self):
         """Main game loop."""
@@ -40,7 +42,7 @@ class Game:
                 sys.exit()
 
             # --- Brick Collision ---
-            if self.bricks.check_collision(self.ball):
+            if self.bricks.check_collision(self.ball,powerup_manager=self.powerups):
                 # Reverse Y direction on hit
                 self.ball.speed[1] = -self.ball.speed[1]
 

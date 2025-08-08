@@ -1,6 +1,7 @@
 import pygame
 from bricks import Brick
 from world import SCREEN_WIDTH, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, TOP_OFFSET, RED, ORANGE, YELLOW
+from powerups import PowerUpManager
 
 # For future level configs
 DEFAULT_LAYOUT = [
@@ -45,10 +46,12 @@ class BrickManager:
     def update(self):
         self.bricks = [b for b in self.bricks if not b.destroyed]
 
-    def check_collision(self, ball):
+    def check_collision(self, ball, powerup_manager=None):
         """Returns True if the ball hit any brick."""
         for brick in self.bricks:
             if brick.rect.colliderect(ball.rect):
                 brick.hit()
+                if powerup_manager:
+                    powerup_manager.on_brick_hit(brick)
                 return True
         return False
