@@ -1,18 +1,23 @@
 import pygame
-from config import WIDTH, HEIGHT, WHITE
+from world import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Paddle:
     def __init__(self):
-        self.width, self.height = 100, 15
-        self.speed = 7
-        self.rect = pygame.Rect(WIDTH//2 - self.width//2, HEIGHT - 40, self.width, self.height)
+        self.width = 150
+        self.height = 20
+        self.speed = 12
+        self.rect = pygame.Rect(
+            SCREEN_WIDTH // 2 - self.width // 2,
+            SCREEN_HEIGHT - 40,
+            self.width,
+            self.height
+        )
 
     def move(self, keys):
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and self.rect.left > 0:
             self.rect.x -= self.speed
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] and self.rect.right < SCREEN_WIDTH:
             self.rect.x += self.speed
-        self.rect.clamp_ip(pygame.Rect(0, 0, WIDTH, HEIGHT))
 
     def draw(self, surface):
-        pygame.draw.rect(surface, WHITE, self.rect)
+        pygame.draw.rect(surface, (255, 255, 255), self.rect)

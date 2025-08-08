@@ -1,15 +1,15 @@
 import pygame
 import sys
-from config import WIDTH, HEIGHT, BLACK, FPS
 from paddle import Paddle
 from ball import Ball
 from bricks import BrickManager
+from world import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, FPS
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Breakout: Hip-Hop Edition")
         self.clock = pygame.time.Clock()
 
