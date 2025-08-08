@@ -1,22 +1,24 @@
+# game.py
+
 import pygame
 import sys
+
 from paddle import Paddle
 from ball import Ball
-from bricks import BrickManager
-from world import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, FPS
+from brick_manager import BrickManager
+from world import SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, BLACK, FPS
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Breakout: Hip-Hop Edition")
-        self.clock = pygame.time.Clock()
 
         # --- Game Objects ---
+        self.screen = SCREEN
         self.paddle = Paddle()
         self.ball = Ball()
-        self.bricks = BrickManager()  # Grid of bricks
+        self.bricks = BrickManager()
+        self.clock = pygame.time.Clock()
 
     def run(self):
         """Main game loop."""
@@ -39,7 +41,7 @@ class Game:
 
             # --- Brick Collision ---
             if self.bricks.check_collision(self.ball):
-                # Simple behavior: reverse ball's Y direction when hitting a brick
+                # Reverse Y direction on hit
                 self.ball.speed[1] = -self.ball.speed[1]
 
             # --- Win Condition ---
@@ -55,6 +57,3 @@ class Game:
             self.bricks.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(FPS)
-
-
-# --- Entry Point

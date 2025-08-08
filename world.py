@@ -1,9 +1,18 @@
 # world.py
 
-# === Screen ===
+# world.py (extended)
+
+import pygame
+
+# === Screen Config ===
 SCREEN_WIDTH = 1980
 SCREEN_HEIGHT = 1080
 FPS = 60
+
+# Create the actual screen surface
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Breakout: Hip-Hop Edition")
+
 
 
 # === Color Palette ===
